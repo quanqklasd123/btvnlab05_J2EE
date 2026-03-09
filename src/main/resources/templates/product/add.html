@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Thêm sản phẩm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/product-ui.css}">
+</head>
+<body>
+    <main class="page-shell">
+        <section class="hero">
+            <div class="hero-copy">
+                <span class="eyebrow">Product Studio</span>
+            </div>
+            <div class="hero-actions">
+                <a class="button-secondary" th:href="@{/products}">Quay lại danh sách</a>
+            </div>
+        </section>
+
+        <section class="form-layout">
+            <form class="form-card" th:action="@{/products/add}" th:object="${product}" method="post" enctype="multipart/form-data">
+                <div class="panel-head">
+                    <div>
+                        <h2 class="panel-title">Thông tin sản phẩm</h2>
+                        <p class="panel-subtitle">Điền đầy đủ các trường bên dưới để sản phẩm hiển thị đẹp và nhất quán trong danh sách.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="field two-up">
+                        <div class="field-block">
+                            <label for="name">Tên sản phẩm</label>
+                            <input class="input" id="name" type="text" th:field="*{name}" placeholder="Ví dụ: Laptop văn phòng" />
+                            <p class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                        </div>
+                        <div class="field-block">
+                            <label for="price">Giá bán</label>
+                            <input class="input" id="price" type="number" th:field="*{price}" placeholder="Nhập giá sản phẩm" />
+                            <p class="error-text" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+                        </div>
+                    </div>
+
+                    <div class="field-block">
+                        <label for="category">Danh mục</label>
+                        <select class="select" id="category" name="category.id">
+                            <option value="">-- Chọn danh mục --</option>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}"></option>
+                        </select>
+                    </div>
+
+                    <div class="field-block">
+                        <label for="imageFile">Hình ảnh</label>
+                        <input class="file-input" id="imageFile" type="file" name="imageFile" accept="image/*" />
+                        <p class="field-hint">Nên dùng ảnh ngang, rõ nét để hiển thị tốt hơn trong bảng sản phẩm.</p>
+                        <p class="error-text" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></p>
+                        <p class="error-text" th:if="${uploadError}" th:text="${uploadError}"></p>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="form-actions">
+                    <button class="button" type="submit">Lưu sản phẩm</button>
+                    <a class="ghost-link" th:href="@{/products}">Hủy và quay lại</a>
+                </div>
+            </form>
+
+            <aside class="preview-card">
+                <div>
+                    <p class="eyebrow">Quick Note</p>
+                    <h2 class="preview-title">Mẹo nhập liệu</h2>
+                </div>
+                <div class="preview-visual">
+                    <div class="preview-placeholder">
+                        Ảnh bạn tải lên sẽ được lưu trực tiếp trong database và hiển thị ngay tại danh sách sản phẩm.
+                    </div>
+                </div>
+                <p class="preview-label">Sau khi lưu, bạn có thể chỉnh sửa lại ảnh bất kỳ lúc nào mà không cần nhập lại toàn bộ dữ liệu.</p>
+            </aside>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Danh sách sản phẩm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/product-ui.css}">
+</head>
+<body>
+    <main class="page-shell">
+        <section class="hero">
+            <div class="hero-copy">
+                <span class="eyebrow">Inventory View</span>
+               
+            </div>
+            <div class="hero-actions">
+                <a class="button" th:href="@{/products/add}">Thêm sản phẩm mới</a>
+            </div>
+        </section>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <p class="stat-label">Tổng sản phẩm</p>
+                <p class="stat-value" th:text="${#lists.size(products)}">0</p>
+            </article>
+            <article class="stat-card">
+                <p class="stat-label">Có hình ảnh</p>
+                <p class="stat-value" th:text="${products.?[image != null].size()}">0</p>
+            </article>
+            <article class="stat-card">
+                <p class="stat-label">Chưa có ảnh</p>
+                <p class="stat-value" th:text="${products.?[image == null].size()}">0</p>
+            </article>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2 class="panel-title">Bảng sản phẩm</h2>
+                    <p class="panel-subtitle">Toàn bộ dữ liệu được hiển thị theo từng dòng để bạn chỉnh sửa, xóa hoặc rà soát ảnh sản phẩm nhanh hơn.</p>
+                </div>
+                <div class="panel-actions">
+                    <a class="ghost-link" th:href="@{/products/add}">Tạo bản ghi mới</a>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Hình ảnh</th>
+                            <th>Danh mục</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="product : ${products}">
+                            <td th:text="${product.id}"></td>
+                            <td>
+                                <p class="product-name" th:text="${product.name}"></p>
+                                <p class="product-meta">Mã sản phẩm <span th:text="${product.id}"></span></p>
+                            </td>
+                            <td>
+                                <span class="price-badge" th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + ' VND'"></span>
+                            </td>
+                            <td>
+                                <img class="image-thumb" th:if="${product.image != null}" th:src="@{/products/{id}/image(id=${product.id})}" alt="Hình ảnh sản phẩm" />
+                                <span class="image-empty" th:unless="${product.image != null}">Chưa có ảnh</span>
+                            </td>
+                            <td>
+                                <span class="category-pill" th:text="${product.category.name}"></span>
+                            </td>
+                            <td>
+                                <div class="table-actions">
+                                    <a class="button-secondary" th:href="@{/products/edit/{id}(id=${product.id})}">Sửa</a>
+                                    <a class="button-danger" th:href="@{/products/delete/{id}(id=${product.id})}"
+                                       onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

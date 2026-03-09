@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chỉnh sửa sản phẩm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/product-ui.css}">
+</head>
+<body>
+    <main class="page-shell">
+        <section class="hero">
+            <div class="hero-copy">
+                <span class="eyebrow">Product Studio</span>
+                <h1 class="hero-title">Tinh chỉnh sản phẩm mà không làm mất nhịp làm việc.</h1>
+                <p class="hero-text">Cập nhật nhanh thông tin, đổi ảnh khi cần và giữ nguyên ảnh cũ nếu bạn không tải tệp mới lên.</p>
+            </div>
+            <div class="hero-actions">
+                <a class="button-secondary" th:href="@{/products}">Quay lại danh sách</a>
+            </div>
+        </section>
+
+        <section class="form-layout">
+            <form class="form-card" th:action="@{/products/edit/{id}(id=${product.id})}" th:object="${product}" method="post" enctype="multipart/form-data">
+                <div class="panel-head">
+                    <div>
+                        <h2 class="panel-title">Cập nhật dữ liệu</h2>
+                        <p class="panel-subtitle">Thay đổi các trường cần thiết, sau đó lưu lại để cập nhật ngay trên trang danh sách.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="field two-up">
+                        <div class="field-block">
+                            <label for="name">Tên sản phẩm</label>
+                            <input class="input" id="name" type="text" th:field="*{name}" placeholder="Tên sản phẩm" />
+                            <p class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                        </div>
+                        <div class="field-block">
+                            <label for="price">Giá bán</label>
+                            <input class="input" id="price" type="number" th:field="*{price}" placeholder="Giá hiện tại" />
+                            <p class="error-text" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+                        </div>
+                    </div>
+
+                    <div class="field-block">
+                        <label for="category">Danh mục</label>
+                        <select class="select" id="category" name="category.id">
+                            <option value="">-- Chọn danh mục --</option>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}"
+                                    th:selected="${product.category != null and product.category.id == category.id}"></option>
+                        </select>
+                    </div>
+
+                    <div class="field-block">
+                        <label for="imageFile">Đổi hình ảnh</label>
+                        <input class="file-input" id="imageFile" type="file" name="imageFile" accept="image/*" />
+                        <p class="field-hint">Nếu không chọn ảnh mới, hệ thống sẽ giữ nguyên ảnh hiện tại.</p>
+                        <p class="error-text" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></p>
+                        <p class="error-text" th:if="${uploadError}" th:text="${uploadError}"></p>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="form-actions">
+                    <button class="button" type="submit">Lưu thay đổi</button>
+                    <a class="ghost-link" th:href="@{/products}">Hủy và quay lại</a>
+                </div>
+            </form>
+
+            <aside class="preview-card">
+                <div>
+                    <p class="eyebrow">Current Media</p>
+                    <h2 class="preview-title">Ảnh hiện tại</h2>
+                </div>
+                <div class="preview-visual">
+                    <img class="preview-image" th:if="${product.image != null}" th:src="@{/products/{id}/image(id=${product.id})}" alt="Hình ảnh sản phẩm" />
+                    <div class="preview-placeholder" th:unless="${product.image != null}">
+                        Sản phẩm này chưa có ảnh. Bạn có thể tải lên một ảnh mới ở biểu mẫu bên trái.
+                    </div>
+                </div>
+                <p class="preview-label">Khung xem trước giúp bạn kiểm tra nhanh trạng thái ảnh hiện tại trước khi cập nhật.</p>
+            </aside>
+        </section>
+    </main>
+</body>
+</html>
